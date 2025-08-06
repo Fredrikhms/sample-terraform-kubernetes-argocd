@@ -80,12 +80,6 @@ resource "kubectl_manifest" "olm_apply" {
   yaml_body = each.value
 }
 
-resource "time_sleep" "wait_150_seconds" {
-  depends_on = [kubectl_manifest.olm_apply]
-
-  create_duration = "150s"
-}
-
 provider "helm" {
   kubernetes = {
     host                   = kind_cluster.default.endpoint
@@ -97,7 +91,7 @@ provider "helm" {
 
 resource "helm_release" "argocd" {
   name  = "argocd"
-  depends_on = [time_sleep.wait_150_seconds]
+  depends_on = [kubectl_manifest.olm_apply]
 
   repository       = "https://argoproj.github.io/argo-helm"
   chart            = "argo-cd"
