@@ -80,19 +80,8 @@ resource "kubectl_manifest" "olm_apply" {
   yaml_body = each.value
 }
 
-data "kubectl_file_documents" "final" {
-  content = file("olm/final.yaml")
-}
-
-resource "kubectl_manifest" "final_apply" {
-  depends_on = [kubectl_manifest.olm_apply]
-  for_each  = data.kubectl_file_documents.final.manifests
-  wait      = true
-  yaml_body = each.value
-}
-
 resource "time_sleep" "wait_150_seconds" {
-  depends_on = [kubectl_manifest.final_apply]
+  depends_on = [kubectl_manifest.olm_apply]
 
   create_duration = "150s"
 }
