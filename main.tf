@@ -17,6 +17,10 @@ terraform {
 
 provider "kind" {}
 
+locals {
+    k8s_config_path = pathexpand(".")
+}
+
 resource "kind_cluster" "default" {
   name = var.cluster_name
   wait_for_ready = true
@@ -34,18 +38,22 @@ resource "kind_cluster" "default" {
         container_port = 443
         host_port      = 443
       }
-    }
 
+      extra_mounts {
+        host_path      = "${path.root}"
+        container_path = "/mnt/local-repo.git"
+        read_only      = true
+      }
+    }
+    
     node {
       role = "worker"
-    }
+      extra_mounts {
+        host_path      = "${path.root}"
+        container_path = "/mnt/local-repo.git"
+        read_only      = true
+      }
 
-    node {
-      role = "worker"
-    }
-
-    node {
-      role = "worker"
     }
   }
 }
@@ -77,6 +85,19 @@ resource "helm_release" "argocd" {
   version          = "8.2.5"
   create_namespace = true
 
+#  values = [
+#    <<EOF
+#repoServer:
+#  volumes:
+#    - name: local-repo
+#      hostPath:
+#        path: /mnt/local-repo.git
+#        type: Directory
+#  volumeMounts:
+#    - name: local-repo
+#      mountPath: /mnt/local-repo.git
+#EOF
+#  ]
 }
 
 resource "helm_release" "argocd-apps" {
@@ -93,3 +114,40 @@ resource "helm_release" "argocd-apps" {
 
   depends_on = [helm_release.argocd]
 }
+
+#data "kubectl_file_documents" "local-repo" {
+#  content = file("argocd/local-repo-secret.yaml")
+#  depends_on = [helm_release.argocd]
+#}
+
+#resource "kubectl_manifest" "local_repo_apply" {
+#  for_each          = data.kubectl_file_documents.local-repo.manifests
+#  yaml_body         = each.value
+#  wait              = true
+#  server_side_apply = true
+#}
+
+#resource "kubernetes_manifest" "local_repo_secret" {
+#  manifest = {
+#    apiVersion = "v1"
+#    kind       = "Secret"
+#    metadata = {
+#      name      = "local-repo"
+#      namespace = "argocd"
+#      labels = {
+#        "argocd.argoproj.io/secret-type" = "repository"
+#      }
+#      annotations = {
+#        "managed-by" = "argocd.argoproj.io"
+#      }
+#    }
+#    type = "Opaque"
+#   stringData = {
+#      type = "git"
+#      name = "local-repo"
+#      url  = "file:///mnt/local-repo.git"
+#    }
+#  }
+#
+#  depends_on = [helm_release.argocd]
+#}
