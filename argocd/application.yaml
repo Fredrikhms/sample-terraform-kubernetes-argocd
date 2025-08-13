@@ -3,7 +3,7 @@ applications:
     namespace: argocd
     project: default
     source:
-      repoURL: https://github.com/Fredrikhms/sample-terraform-kubernetes-argocd.git
+      repoURL: file:///mnt/local-repo.git
       targetRevision: HEAD
       path: argocd/manifests/cluster
       directory:
@@ -14,3 +14,12 @@ applications:
       automated:
         prune: false
         selfHeal: false
+    repoServer:
+      volumes:
+        - name: local-repo
+          hostPath:
+            path: /mnt/local-repo.git
+            type: Directory
+      volumeMounts:
+        - name: local-repo
+          mountPath: /mnt/local-repo.git
