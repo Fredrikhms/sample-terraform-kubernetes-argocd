@@ -1,7 +1,9 @@
 [tools]
 argocd = "latest"
 bat = "latest"
+helm = "latest"
 jj = "0.32"
 just = "1.42.4"
 kubectl = "1.33.3"
 opentofu = "1.10.5"
+yq = "latest"

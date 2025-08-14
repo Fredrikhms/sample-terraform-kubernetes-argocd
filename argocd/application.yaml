@@ -3,7 +3,7 @@ applications:
     namespace: argocd
     project: default
     source:
-      repoURL: file:///mnt/local-repo.git
+      repoURL: file:///tmp/local-repo.git
       targetRevision: HEAD
       path: argocd/manifests/cluster
       directory:
@@ -22,4 +22,4 @@ applications:
             type: Directory
       volumeMounts:
         - name: local-repo
-          mountPath: /mnt/local-repo.git
+          mountPath: /tmp/local-repo.git

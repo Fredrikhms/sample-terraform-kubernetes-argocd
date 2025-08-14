@@ -1,0 +1,10 @@
+repoServer:
+  volumes:
+    - name: local-repo
+      hostPath:
+        path: /mnt/local-repo.git
+        type: Directory
+  volumeMounts:
+    - name: local-repo
+      mountPath: /tmp/local-repo.git
+

@@ -85,20 +85,9 @@ resource "helm_release" "argocd" {
   version          = "8.2.5"
   create_namespace = true
 
-#  values = [
-#    <<EOF
-#repoServer:
-#  volumes:
-#    - name: local-repo
-#      hostPath:
-#        path: /mnt/local-repo.git
-#        type: Directory
-#  volumeMounts:
-#    - name: local-repo
-#      mountPath: /mnt/local-repo.git
-#EOF
-#  ]
-}
+  values = [
+    file("argocd/argocd-server.yaml")
+  ]
 
 resource "helm_release" "argocd-apps" {
   name  = "argocd-apps"
