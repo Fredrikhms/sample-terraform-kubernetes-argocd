@@ -88,6 +88,7 @@ resource "helm_release" "argocd" {
   values = [
     file("argocd/argocd-server.yaml")
   ]
+}
 
 resource "helm_release" "argocd-apps" {
   name  = "argocd-apps"
@@ -104,39 +105,3 @@ resource "helm_release" "argocd-apps" {
   depends_on = [helm_release.argocd]
 }
 
-#data "kubectl_file_documents" "local-repo" {
-#  content = file("argocd/local-repo-secret.yaml")
-#  depends_on = [helm_release.argocd]
-#}
-
-#resource "kubectl_manifest" "local_repo_apply" {
-#  for_each          = data.kubectl_file_documents.local-repo.manifests
-#  yaml_body         = each.value
-#  wait              = true
-#  server_side_apply = true
-#}
-
-#resource "kubernetes_manifest" "local_repo_secret" {
-#  manifest = {
-#    apiVersion = "v1"
-#    kind       = "Secret"
-#    metadata = {
-#      name      = "local-repo"
-#      namespace = "argocd"
-#      labels = {
-#        "argocd.argoproj.io/secret-type" = "repository"
-#      }
-#      annotations = {
-#        "managed-by" = "argocd.argoproj.io"
-#      }
-#    }
-#    type = "Opaque"
-#   stringData = {
-#      type = "git"
-#      name = "local-repo"
-#      url  = "file:///mnt/local-repo.git"
-#    }
-#  }
-#
-#  depends_on = [helm_release.argocd]
-#}
