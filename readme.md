@@ -1,7 +1,5 @@
-# Manage Kubernetes Cluster with Terraform and Argo CD [![Twitter](https://img.shields.io/twitter/follow/piotr_minkowski.svg?style=social&logo=twitter&label=Follow%20Me)](https://twitter.com/piotr_minkowski)
+# Manage Kubernetes Cluster with Terraform and Argo CD
 
-
-[![CircleCI](https://circleci.com/gh/piomin/sample-terraform-kubernetes-argocd.svg?style=svg)](https://circleci.com/gh/piomin/sample-terraform-kubernetes-argocd)
 
 In this project I'm demonstrating you how to use [Terraform](https://www.terraform.io/) together with [Argo CD](https://argo-cd.readthedocs.io/en/stable/) to create and manage the Kubernetes cluster on [Kind](https://kind.sigs.k8s.io/).
 
@@ -11,11 +9,11 @@ In this project I'm demonstrating you how to use [Terraform](https://www.terrafo
 
 ## Getting Started
 
-You may the detailed explanation of that example repository in the following article: [Manage Kubernetes Cluster with Terraform and Argo CD](https://piotrminkowski.com/2022/06/28/manage-kubernetes-cluster-with-terraform-and-argo-cd/)
+It is based on and forked fom the example repo from in the following article: [Manage Kubernetes Cluster with Terraform and Argo CD](https://piotrminkowski.com/2022/06/28/manage-kubernetes-cluster-with-terraform-and-argo-cd/)
 
 First, clone that repo:
 ```shell
-$ git clone https://github.com/piomin/sample-terraform-kubernetes-argocd.git
+$ git clone https://github.com/Fredrikhms/sample-terraform-kubernetes-argocd.git
 $ cd sample-terraform-kubernetes-argocd
 ```
 
@@ -37,8 +35,10 @@ terraform apply
 ## Results
 
 After running the previous command you receive:
-* 3-nodes Kind cluster running locally
-* OLM (Operator Lifecycle Manager) installed on Kind
+* 2-nodes Kind cluster running locally
 * Argo CD installed on Kind
-* Kafka Strimzi operator ready to use
-* 3-node Kafka cluster created on Kind
+* Argo cd scanning the local git file system for updates (WIP: problems with the git permisions) 
+* 'just argocd' command to run argocd dashboard.
+* 'just sync' command to sync local changes with argocd. 
+    - TODO: Needs to be configured using 'argocd login --core' or 'argocd login --sso'
+    - TODO: If '--core' is used, then '~/.kube/config' context must be in the 'argocd' namespace. 
