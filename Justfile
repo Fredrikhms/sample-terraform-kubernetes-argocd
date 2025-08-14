@@ -21,4 +21,4 @@ helm-inpect-volumes:
   just helm | yq  '.spec | select( . != null) | .template | select ( . != null) | .spec.volumes' 
 
 sync: #https://github.com/argoproj/argo-cd/discussions/9912#discussioncomment-9981095
-  argocd app sync cluster-config --local ./argocd/manifests/cluster
+  argocd app sync cluster-config --local ./argocd/manifests/cluster --prune
