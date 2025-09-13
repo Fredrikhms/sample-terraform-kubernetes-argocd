@@ -20,5 +20,10 @@ helm:
 helm-inpect-volumes: 
   just helm | yq  '.spec | select( . != null) | .template | select ( . != null) | .spec.volumes' 
 
+sync-setup:
+  argocd login cd.argoproj.io --core 
+  kubectl config set-context kind-cluster-1 --namespace='argocd'
+  kubectl -n argocd patch --type='merge' application cluster-config -p "{\"spec\":{\"syncPolicy\":null}}"
+
 sync: #https://github.com/argoproj/argo-cd/discussions/9912#discussioncomment-9981095
   argocd app sync cluster-config --local ./argocd/manifests/cluster --prune

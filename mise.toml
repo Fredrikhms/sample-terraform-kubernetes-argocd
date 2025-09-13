@@ -1,6 +1,7 @@
 [tools]
 argocd = "latest"
 bat = "latest"
+difftastic = "latest"
 helm = "latest"
 jj = "0.32"
 just = "1.42.4"
